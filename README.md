@@ -1,4 +1,4 @@
-# Devin Wittmayer
+# Lucid Duck
 
 Linux kernel debugging. Wireless security research. Finding bugs that weren't supposed to exist.
 
@@ -29,6 +29,6 @@ Linux kernel debugging. Wireless security research. Finding bugs that weren't su
 
 ### Contact
 
-- **Email:** devinwittmayer@gmail.com
+- **Email:** lucid_duck@justthetip.ca
 - **Location:** Vancouver Island, BC
 - **Availability:** Remote work, flexible hours
