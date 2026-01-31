@@ -15,8 +15,9 @@ Linux kernel debugging. Wireless security research. Finding bugs that weren't su
 - Discovered local privilege escalation to root RCE in an enterprise network monitoring agent via symlink following + ld.so.preload injection. Any local user achieves persistent root access affecting all process execution system-wide. CVSS 8.8-9.3 (Critical).
 
 **Enterprise VPN Infrastructure**
-- Binary analysis of virtual gateway firmware revealed empty root password, hardcoded single-character credentials, and permissive PAM configuration. Achieved root shell access; SSH authentication bypass proven. CVSS 9.8 (Critical).
-- Command injection in enterprise VPN client's route handling—user-controlled XML data flows through snprintf() directly to system() as root. Full code path traced through static analysis from profile parsing to code execution. CVSS 9.0 (Critical).
+- Vendor licensing restrictions blocked normal operation, so I reverse engineered the entire system from compiled binaries alone—no documentation, no references, no source code. Reconstructed the complete XML profile schema from scratch by tracing code paths through disassembly. Fixed unrelated bugs in the binary just to reach the vulnerable code paths. This pure black-box analysis revealed:
+  - Virtual gateway firmware with empty root password and single-character hardcoded credentials. Achieved root shell via GRUB modification; SSH authentication bypass proven. CVSS 9.8 (Critical).
+  - Command injection in VPN client route handling—traced user-controlled XML data through snprintf() directly to system() as root via static analysis. CVSS 9.0 (Critical).
 
 **IoT/Embedded Systems**
 - Unauthenticated D-Bus RCE on network camera firmware. Reverse engineered binary event condition serialization format to trigger arbitrary command execution via user-controllable virtual inputs. Privilege escalation grants hardware GPIO, storage, and messaging access.
