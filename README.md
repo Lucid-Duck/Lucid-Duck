@@ -2,7 +2,7 @@
 
 Linux kernel debugging. Wireless security research. Finding bugs that weren't supposed to exist.
 
-**[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)**
+**[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)** | **devinwittmayer@gmail.com**
 
 ---
 
@@ -53,10 +53,4 @@ Linux kernel debugging. Wireless security research. Finding bugs that weren't su
 
 Remote security research, vulnerability research, or driver development roles.
 
----
-
-### Contact
-
-- **Email:** lucid_duck@justthetip.ca
-- **Location:** Vancouver Island, BC
-- **Availability:** Remote work, flexible hours
+**Contact:** devinwittmayer@gmail.com | Vancouver Island, BC | Available immediately
