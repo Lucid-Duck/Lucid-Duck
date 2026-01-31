@@ -2,6 +2,8 @@
 
 Linux kernel debugging. Wireless security research. Finding bugs that weren't supposed to exist.
 
+**[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)**
+
 ---
 
 ### Recent Work
