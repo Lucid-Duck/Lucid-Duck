@@ -22,7 +22,10 @@ Security researcher and ethical hacker. Finding bugs that weren't supposed to ex
 ### Security Research (February 2026)
 
 **Major Telecom -- Proven Email Account Takeover + Full-Scope Infrastructure Audit**
-- Proved complete email account takeover on a production webmail platform -- built a tool that cracked the one-time password in 15 minutes, received a valid session token, and demonstrated that any account was vulnerable knowing nothing but the email address. Lockout was hardcoded to zero, two-factor authentication was globally disabled, and date-of-birth validation was non-functional. This was just the starting point for a broader engagement that uncovered: a zero-click stored XSS achieving the same account takeover from a single malicious email (novel sanitizer bypass exploiting DOM attribute enumeration order), 27 production secrets extracted from their Android app's obfuscated native library including credentials that authenticated against the live subscriber database, five unauthenticated eSIM management endpoints exposing active subscriber data on the production API, and a host header bypass that defeated the corporate identity server's entire authentication layer.
+- Proved complete email account takeover on a production webmail platform serving millions of subscribers -- built a tool that cracked the one-time password in 15 minutes, received a valid session token, and demonstrated that any account was vulnerable knowing nothing but the email address. Lockout was hardcoded to zero, two-factor authentication was globally disabled, and date-of-birth validation was non-functional. This was just the starting point for a broader engagement that uncovered: a zero-click stored XSS achieving the same account takeover from a single malicious email (novel sanitizer bypass exploiting DOM attribute enumeration order), 27 production secrets extracted from their Android app's obfuscated native library including credentials that authenticated against the live subscriber database, five unauthenticated eSIM management endpoints exposing active subscriber data on the production API, and a host header bypass that defeated the corporate identity server's entire authentication layer.
+
+**Enterprise Endpoint Protection -- DNS Parser Stack Overflow**
+- Discovered a stack overflow in a major endpoint security vendor's network filter service triggered by a single crafted UDP packet. 100% reproducible persistent denial of service on Windows -- confirmed across 13 crash dumps. Vendor reproduced the bug and confirmed a fix. CVE and security advisory pending.
 
 **Enterprise VPN -- Three Independent Privilege Escalations from One Product**
 - Reverse engineered an enterprise VPN product deployed across thousands of organizations and found three distinct privilege escalation chains:
@@ -41,10 +44,10 @@ Security researcher and ethical hacker. Finding bugs that weren't supposed to ex
 ### Security Research (January 2026)
 
 **Enterprise Endpoint Protection**
-- Reverse engineered a proprietary binary IPC protocol to discover quarantine bypass and cloud log injection in a major security vendor's Linux EDR. Malware can survive detection indefinitely; audit logs can be poisoned with fabricated entries visible in the cloud admin console. CVSS 7.1-7.3 (High).
+- Reverse engineered a proprietary binary IPC protocol to discover quarantine bypass and cloud log injection in a major security vendor's Linux EDR. Malware can survive detection indefinitely; audit logs can be poisoned with fabricated entries visible in the cloud admin console. CVSS 7.1-7.3 (High). CVE pending.
 
 **Network Monitoring Appliance**
-- Discovered local privilege escalation to root in an enterprise network monitoring agent via symlink following + ld.so.preload injection. Any local user achieves persistent root access affecting all process execution system-wide. CVSS 8.8-9.3 (Critical).
+- Discovered local privilege escalation to root in an enterprise network monitoring agent via symlink following + ld.so.preload injection. Any local user achieves persistent root access affecting all process execution system-wide. CVSS 8.8-9.3 (Critical). Vendor-confirmed fix; CVE and security advisory pending.
 
 **Enterprise VPN Infrastructure**
 - Vendor licensing restrictions blocked normal operation, so I reverse engineered the entire system from compiled binaries alone -- no documentation, no references, no source code. Reconstructed the complete XML profile schema by tracing code paths through disassembly. Fixed unrelated bugs in the binary just to reach the vulnerable code paths. This pure black-box analysis revealed:
