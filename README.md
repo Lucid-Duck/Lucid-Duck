@@ -1,6 +1,6 @@
 # Lucid Duck
 
-Security researcher and ethical hacker. Finding bugs that weren't supposed to exist.
+Security researcher and ethical hacker. Stripped binaries, hardened targets, my goldmine.
 
 **[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)** | **devinwittmayer@gmail.com**
 
