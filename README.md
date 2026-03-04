@@ -8,14 +8,8 @@ Security researcher and ethical hacker. Finding bugs that weren't supposed to ex
 
 ### Security Research (March 2026)
 
-**eSIM Provisioning Server -- Zero Authentication on Nation-Wide Critical Infrastructure**
-- Discovered that the production eSIM provisioning server for a major carrier -- the single system responsible for every eSIM activation on the entire network -- was accepting commands from anyone on the internet with zero authentication. Sixteen management functions including downloading SIM profiles, deleting profiles, and batch operations were all completely exposed across seven hostnames. Industry specifications explicitly mandate mutual TLS on this interface; there was none. One of the most sensitive systems in telecom infrastructure, wide open.
-
-**SIM Swap Attack -- Complete Chain Proven on Production**
-- Proved that any phone number on a major carrier's network could be stolen via SIM port-in by chaining credentials extracted from earlier APK reverse engineering with a brute-forceable one-time password that had no rate limiting or lockout. Built the full attack chain end-to-end on a live production system -- the server approved the port automatically with no human review. Millions of subscribers were at risk.
-
-**OAuth Login Flow Bypass -- Multi-Million-Dollar WAF Rendered Useless**
-- Identified a critical flaw in a mobile app's login API serving millions of users: the enterprise web application firewall protecting the login flow was completely bypassable with a single forged HTTP header. The security token between authentication steps was checked for presence only, not validity -- any arbitrary string worked. Proved it with differential server responses that show credentials being checked against the backend. The entire WAF investment was worthless.
+**Major Telecom -- Nation-Wide eSIM Infrastructure Exposed + SIM Hijacking**
+- Discovered that a carrier's production eSIM provisioning server -- the single system responsible for every eSIM activation on the network -- had zero authentication, with 16 management functions exposed to the open internet including downloading SIM profiles, deleting profiles, and batch operations. Industry standards mandate mutual TLS on this interface; there was none. Separately proved that any phone number on the network could be stolen via SIM port-in by chaining earlier APK research into a complete attack chain executed end-to-end on production -- the server approved the hijack automatically with no human review. Also found the carrier's WAF-protected login flow could be completely bypassed with a single forged HTTP header, rendering the entire firewall investment useless.
 
 **SSO Desktop Authenticator -- SYSTEM Service Exploitation + 13 Vulnerabilities**
 - Decompiled 16 .NET assemblies from a widely-deployed identity provider's desktop authenticator and uncovered 13 distinct vulnerabilities. Found unauthenticated command injection into a SYSTEM-level service from any local user, CORS origin reflection on a passwordless auth server that would let any website hijack the authentication flow, encryption with null entropy rendering it decorative, and a race condition in the auto-updater enabling arbitrary code execution as SYSTEM.
@@ -27,11 +21,8 @@ Security researcher and ethical hacker. Finding bugs that weren't supposed to ex
 
 ### Security Research (February 2026)
 
-**Telecom Webmail -- Proven Account Takeover Affecting Millions of Users**
-- Proved that any email account on a production webmail platform serving millions of subscribers could be completely taken over knowing nothing but the email address. Built a tool that cracked the one-time password in 15 minutes with no rate limiting, no lockout, and no penalties. Server-side date-of-birth validation was non-functional. An unauthenticated configuration endpoint confirmed lockout was hardcoded to zero and two-factor authentication was globally disabled. Received a valid session token proving full authentication bypass.
-
-**Telecom Webmail -- Zero-Click Stored XSS to Email Account Takeover**
-- Discovered two novel bypasses in a custom HTML sanitizer affecting the same millions of users. The zero-click chain exploits DOM attribute enumeration order so that an attacker-controlled `sandbox` attribute overrides the sanitizer's safe default -- JavaScript executes the instant the victim opens the email with zero interaction. Combined with wildcard CORS and disabled two-factor auth, a single crafted email silently takes over the entire account.
+**Major Telecom -- Proven Email Account Takeover + Full-Scope Infrastructure Audit**
+- Proved complete email account takeover on a production webmail platform -- built a tool that cracked the one-time password in 15 minutes, received a valid session token, and demonstrated that any account was vulnerable knowing nothing but the email address. Lockout was hardcoded to zero, two-factor authentication was globally disabled, and date-of-birth validation was non-functional. This was just the starting point for a broader engagement that uncovered: a zero-click stored XSS achieving the same account takeover from a single malicious email (novel sanitizer bypass exploiting DOM attribute enumeration order), 27 production secrets extracted from their Android app's obfuscated native library including credentials that authenticated against the live subscriber database, five unauthenticated eSIM management endpoints exposing active subscriber data on the production API, and a host header bypass that defeated the corporate identity server's entire authentication layer.
 
 **Enterprise VPN -- Three Independent Privilege Escalations from One Product**
 - Reverse engineered an enterprise VPN product deployed across thousands of organizations and found three distinct privilege escalation chains:
@@ -39,20 +30,11 @@ Security researcher and ethical hacker. Finding bugs that weren't supposed to ex
   - *Linux IPC Command Injection to Root:* Two messages to an unauthenticated Unix socket -- shell metacharacters concatenated directly into `system()` as root. Any unprivileged user to full root in under two seconds.
   - *Linux Symlink Following to Root:* Newline injection writes attacker-controlled content to any file as root. Chained to persistent root code execution via `/etc/ld.so.preload` -- the injected shared library loads on every subsequent process execution system-wide.
 
-**Mobile App Reverse Engineering -- 27 Production Secrets from a Single APK**
-- Fully decompiled a major mobile application protected by commercial DRM and found every production secret hidden behind a trivially reversible XOR S-box. Extracted 27 credentials spanning 13 environments and chained them into increasingly severe exploits: bearer token generation, a login flow with no rate limiting, real phone number allocation from the live provisioning system, payment API tokens, and SIM authentication sessions where the app's proprietary RC4+MD5 encryption was fully replicated and accepted by the production subscriber database.
-
 **Virtual Gateway Firmware -- Fleet-Wide Certificate Forgery**
 - Extracted a hardcoded CA private key from enterprise gateway firmware -- generated once in 2016, identical across every deployment worldwide. Built a working man-in-the-middle proxy that forges trusted certificates for any installation on earth. Also found a production domain's private TLS key deployed as the default web server certificate on every boot. Delivered extracted keys, forged certificates, working MITM proxy, and a decrypted TLS capture showing intercepted credentials in plaintext.
 
 **Fintech Mobile App -- Deep Binary Reverse Engineering + CDN Bypass Pipeline**
 - Reverse engineered a financial application compiled to Hermes bytecode -- a binary format that stops most security researchers cold. Patched an open-source decompiler to support a version it couldn't handle, then analyzed 127MB of decompiled output to extract 14 distinct vulnerability classes across authentication, payments, identity verification, and fraud detection. Separately built a CDN bot-management bypass pipeline: rooted emulator, live memory dump at addresses standard tools can't reach, token extraction, and TLS-fingerprint-spoofed replay for full authenticated API access.
-
-**eSIM Infrastructure -- Unauthenticated Production API with Subscriber Enumeration**
-- Found five eSIM management endpoints on a major carrier's production gateway that accepted commands with zero authentication. Discovered a response oracle that reveals active subscriber phone numbers, then enumerated tens of thousands of numbers and confirmed hundreds of active subscribers. Demonstrated that a single machine could map every active subscriber in a million-number prefix in under four days.
-
-**Corporate Identity Infrastructure -- Host Header Authentication Bypass**
-- Discovered that a corporate federation server's entire authentication layer could be bypassed with a single HTTP header, exposing the full identity backend. Leveraged this to find a 75x timing oracle for employee username enumeration, extracted internal domain architecture via NTLM metadata, and confirmed unlimited credential spray capability. Identified six real employee accounts through timing analysis alone.
 
 ---
 
