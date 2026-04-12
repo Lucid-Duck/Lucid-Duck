@@ -1,8 +1,10 @@
 # Lucid Duck
 
-I reverse engineer the systems vendors assume no one will look at: licensing-locked firmware, undocumented drivers, proprietary bytecode formats the open-source tools can't even read. I patch whatever breaks along the way, trace bugs from user space through the kernel to the RF layer, and push the fixes upstream when the bug lives there. Four vendor-confirmed CVEs pending, plus the ones that will never see daylight. Stripped binaries, hardened targets, my goldmine.
+I reverse engineer the systems vendors assume no one will look at: licensing-locked firmware, undocumented drivers, and proprietary bytecode formats that open-source tools can't even read. I patch whatever breaks along the way, trace bugs from user space through the kernel to the RF layer, and push the fixes upstream. Four vendor-confirmed CVEs pending, plus the ones that will never see daylight thanks to NDAs. Direct CVE links will be posted here Q4 2026 to Q1 2027
 
-**[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)** | **devinwittmayer@gmail.com**
+_Stripped binaries, hardened targets, my goldmine._
+
+**[Upstream Kernel Contributions](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca)** | Contact: **lucid_duck@justthetip.ca** or **devinwittmayer@gmail.com**
 
 ---
 
@@ -73,4 +75,4 @@ Focus: USB Wi-Fi driver debugging, cross-layer analysis (USB <-> kernel <-> RF),
 
 Remote roles in Linux driver development, reverse engineering contracts, and vulnerability research.
 
-**Contact:** devinwittmayer@gmail.com | Vancouver Island, BC | Available immediately
+**Contact:** devinwittmayer@gmail.com | Vancouver Island, BC, Canada | Available immediately
