@@ -17,10 +17,13 @@ _Stripped binaries, hardened targets, my goldmine._
 Upstream contributions, debugging, and reverse engineering of Linux wireless and USB drivers.
 
 **Upstream Patches**
-- [rtw89 USB TX flow control fix](https://github.com/morrownr/rtw89/pull/52) -- Fixed a mac80211 contract violation causing packet loss under load.
-- [mt7921u TX power reporting](https://github.com/Lucid-Duck/mt7921u-debugging) -- Traced an INT_MIN propagation bug through the mac80211 subsystem; patches submitted upstream.
+- [`wifi: rtw89: usb: fix TX flow control by tracking in-flight URBs`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) -- **Merged to mainline 2026-04-02** (commit `80119a77e5b0`). Acked-by + Signed-off-by: Ping-Ke Shih (Realtek rtw89 maintainer). Fixes a mac80211 TX flow control contract violation in the rtw89 USB driver. Development history: [tx-resources-flow-control](https://github.com/Lucid-Duck/tx-resources-flow-control).
+- [`wifi: mt76: connac: use a helper to cache txpower_cur`](https://lore.kernel.org/linux-wireless/?q=txpower_cur) -- MediaTek engineer Sean Wang's v2 series on linux-wireless (2026-04-01). Carries `Reported-by`, `Tested-by`, `Co-developed-by`, and `Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>` on the lead patches. Fixes bogus 3 dBm txpower for all MT7921/MT7922/MT7925 devices. Awaiting Felix Fietkau merge. Development history: [mt7921-txpower-fix](https://github.com/Lucid-Duck/mt7921-txpower-fix).
+- [Netgear A8500 VID-PID for mt7925u](https://lore.kernel.org/linux-wireless/?q=A8500) -- trivial ID-table addition submitted 2026-03-26, awaiting review.
+- [mt76 RX bitrate reporting for MT7921/MT7922/MT7925](https://github.com/Lucid-Duck/mt76-rxrate) -- patch complete, soliciting community Tested-by before upstream submission.
 
 **Driver Research**
+- [rtw89 USB 2 to USB 3 switch-mode gap](https://github.com/Lucid-Duck/rtw89-usb3-gap) -- Empirical proof that mainline rtw89 is missing the USB 2 to USB 3 switch-mode code that lives in `morrownr/rtw89`, silently capping every Realtek WiFi 6/6E/7 USB adapter at USB 2.0 high-speed. Measured 258 Mbps stock to 802 Mbps with the out-of-tree driver on the same DWA-X1850 hardware (3.1x upload).
 - [WiFi adapter pentest comparison](https://github.com/Lucid-Duck/wifi-pentest-comparisons) -- RTL8832AU vs MT7921U for wireless security assessments.
 
 Focus: USB Wi-Fi driver debugging, cross-layer analysis (USB <-> kernel <-> RF), and reverse engineering undocumented hardware behaviour. Write-ups at [justthetip.ca](https://justthetip.ca).
