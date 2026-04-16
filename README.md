@@ -1,6 +1,10 @@
 # Lucid Duck
 
-I reverse engineer the systems vendors assume no one will look at: licensing-locked firmware, undocumented drivers, and proprietary bytecode formats that open-source tools can't even read. I patch whatever breaks along the way, trace bugs from user space through the kernel to the RF layer, and push the fixes upstream. First CVE published: **[CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU)** (Cisco ThousandEyes Enterprise Agent, 2026-04-15). Three more vendor-confirmed CVEs in the pipeline, plus the ones that will never see daylight thanks to NDAs. More advisories to follow as disclosure windows close.
+I reverse engineer the systems vendors assume no one will look at: licensing-locked firmware, undocumented drivers, and proprietary bytecode formats that open-source tools can't even read. I patch whatever breaks along the way, trace bugs from user space through the kernel to the RF layer, and push the fixes upstream.
+
+**First CVE:** [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) -- Cisco ThousandEyes Enterprise Agent, published 2026-04-15.
+
+Three more vendor-confirmed CVEs in the pipeline, plus the ones that will never see daylight thanks to NDAs. More advisories to follow as disclosure windows close.
 
 _Stripped binaries, hardened targets, my goldmine._
 
@@ -54,7 +58,7 @@ Focus: USB Wi-Fi driver debugging, cross-layer analysis (USB <-> kernel <-> RF),
 
 *Enterprise Linux EDR.* Reverse engineered a proprietary binary IPC protocol to discover quarantine bypass and cloud log injection. Malware survives detection indefinitely; audit logs poison-able with fabricated entries visible in the cloud admin console. High severity.
 
-*Network Monitoring Agent (Cisco ThousandEyes Enterprise Agent).* Local privesc to root via symlink following + `ld.so.preload` injection. Persistent system-wide root from any unprivileged user. Critical severity. **Published as [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) on 2026-04-15 (Cisco rated the primitive CWE-59 arbitrary file overwrite at CVSS 5.5).**
+*Network Monitoring Agent (Cisco ThousandEyes Enterprise Agent).* Local privesc to root via symlink following + `ld.so.preload` injection. Persistent system-wide root from any unprivileged user. **Published as [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) on 2026-04-15 (CWE-59, CVSS 5.5 Medium).**
 
 *Network Camera.* Unauthenticated RCE via reverse-engineered binary event condition serialisation -- arbitrary command execution through user-controllable virtual inputs.
 
