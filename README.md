@@ -2,7 +2,7 @@
 
 > **Linux internals · reverse engineering · vulnerability research**
 
-[![CVE-2026-20161](https://img.shields.io/badge/CVE--2026--20161-Cisco_ThousandEyes-critical)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![Linux mainline contributor](https://img.shields.io/badge/Linux_kernel-mainline_contributor-orange?logo=linux&logoColor=white)](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) [![morrownr/mt76 collaborator](https://img.shields.io/badge/morrownr%2Fmt76-collaborator-blue)](https://github.com/morrownr/mt76) ![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)
+[![CVE-2026-20161](https://img.shields.io/badge/CVE--2026--20161-Cisco_ThousandEyes-critical)](https://nvd.nist.gov/vuln/detail/CVE-2026-20161) [![Linux mainline contributor](https://img.shields.io/badge/Linux_kernel-mainline_contributor-orange?logo=linux&logoColor=white)](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca) [![morrownr/mt76 collaborator](https://img.shields.io/badge/morrownr%2Fmt76-collaborator-blue)](https://github.com/morrownr/mt76) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry)
 
 A patch in the mainline Linux kernel, a published CVE, a from-scratch reverse-engineered Wi-Fi driver, and a paid embedded-firmware reverse-engineering contract - **all built since January 2026**, when I went full-time on Linux internals, reverse engineering, and vulnerability research.
 
@@ -26,7 +26,7 @@ The AIC8800 USB Wi-Fi family has **no mainline Linux support**: the vendor ships
 
 | Contribution | Status |
 |---|---|
-| rtw89 USB TX flow-control fix (`80119a77e5b0`) | ✅ **Mainline** |
+| rtw89 USB TX flow-control fix ([`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0)) | ✅ **Mainline** |
 | mac80211 monitor-mode injection fix (`d832f6b83d48`) | ✅ **Merged**, lands in 7.2 |
 | Netgear A8500 USB device ID (`mt7925u`) | ✅ **Accepted** (wireless-next) |
 | USB RF-calibration timeout fix (crash log + 5 tester confirmations) | ✅ **Merged** |
@@ -55,7 +55,7 @@ Automotive keyless-entry firmware RE for a hardware-security vendor: **a dozen f
 
 *All findings disclosed through coordinated disclosure; most have shipped fixes. Vendor names are withheld where embargoes or NDAs apply.*
 
-- **Local root on a Linux network-monitoring agent** - [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) (Cisco ThousandEyes), my first CVE. Symlink-following plus a Linux loader feature lets any local user gain persistent system-wide root.
+- **Local root on a Linux network-monitoring agent** - [CVE-2026-20161](https://nvd.nist.gov/vuln/detail/CVE-2026-20161) (Cisco ThousandEyes), my first CVE. Symlink-following plus a Linux loader feature lets any local user gain persistent system-wide root.
 - **Three privilege escalations in an enterprise VPN client:** a Windows race to SYSTEM, a Linux command injection running as root from an unauthenticated local socket, and a Linux file-write primitive that becomes system-wide RCE. Three CVEs pending; the same product also leaked credentials via a world-readable shared-memory region.
 - **Remote code execution in a Windows endpoint-protection product:** one crafted UDP packet corrupts memory in the network-filter service. Vendor-confirmed, fix shipped.
 - **Cross-customer impersonation on a virtual-gateway product:** a certificate-authority private key hardcoded into firmware and identical across every deployment worldwide, allowing forged certificates trusted by any install. The same product line also yielded an RSA-512 license-signing key forgery (512-bit modulus factored, private key recovered), validated on a live appliance.
