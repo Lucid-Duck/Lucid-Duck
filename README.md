@@ -66,4 +66,4 @@ Automotive keyless-entry firmware RE for a hardware-security vendor: **a dozen f
 
 ---
 
-<sub>45+ repositories and counting - built, tested, and documented as I go.</sub>
+<sub>50+ repositories and counting - built, tested, and documented as I go.</sub>
