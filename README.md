@@ -27,8 +27,10 @@ Merged to mainline. I've labelled my role on each, since some I authored and oth
 | mt76 / mt792x: report txpower for the requested vif link | [`879d754e48f6`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=879d754e48f6) | Reported, Tested |
 | rtw89 / phy: increase RF calibration timeouts for USB transport | [`5055188134c3`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5055188134c3) | Reported, Tested |
 | mac80211: fix monitor mode frame capture for real chanctx drivers | [`d832f6b83d48`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d832f6b83d48) | Tested, Signed-off |
+| mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Author |
+| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Author |
 
-In review on linux-wireless: mt76 NPU/PPE checks restricted to MMIO devices, mt7925 usb/sdio TX headroom, mt7925 mlo_pm_work cancel-on-stop (use-after-free), mt76 TXRX_NOTIFY dropped on non-MMIO buses (three chips), and mt76x02 fcsfail monitor-mode RX fixes.
+Accepted in the mt76 tree and queued for mainline: mt7925 usb/sdio TX headroom, mt7925 mlo_pm_work cancel-on-stop, and mt76x02 fcsfail monitor-mode RX fixes. In review on linux-wireless: mt792x active-monitor advertisement fix.
 
 Write and triage collaborator on [morrownr/mt76](https://github.com/morrownr/mt76): review, tester coordination, and liaison between the repo, linux-wireless, and MediaTek. The end-user [install and uninstall scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) let anyone run the patched drivers without opening a kernel tree.
 
