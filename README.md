@@ -36,6 +36,8 @@ Accepted and queued for mainline: mt7925 usb/sdio TX headroom, mt7925 mlo_pm_wor
 
 In review on linux-wireless: an mt76 USB/SDIO TX-completion RCU fix, `drv_pmctrl` return checks on the mt7921 and mt7925 PCIe reset paths, `dev->mutex` / `iflist_mtx` lock-inversion fixes for mt7921 and mt7925, mt792x ACPI SAR table length validation, and an mt7615 fix to stop tearing down BSS/STA state for monitor vifs.
 
+Also in flight, on MediaTek's own patches: Co-developed-by on an mt792x SDIO TX use-after-free fix, and Tested-by on the mt792x USB TX memory-leak fix and the mt7925 module-unload MCU timeout fix.
+
 Write and triage collaborator on [morrownr/mt76](https://github.com/morrownr/mt76): review, tester coordination, and liaison between the repo, linux-wireless, and MediaTek. The end-user [install and uninstall scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) let anyone run the patched drivers without opening a kernel tree.
 
 ### AIC8800 open-firmware Wi-Fi driver (clean-room, in progress)
