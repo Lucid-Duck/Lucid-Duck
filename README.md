@@ -29,8 +29,12 @@ Merged to mainline. I've labelled my role on each, since some I authored and oth
 | mac80211: fix monitor mode frame capture for real chanctx drivers | [`d832f6b83d48`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d832f6b83d48) | Tested, Signed-off |
 | mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Author |
 | mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Author |
+| mt76 / mt7921: refactor regd update to fix recursive mutex deadlock | [`d6e7d57ed967`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d6e7d57ed967) | Tested |
+| mt76: revert "Disable napi when removing device" (unload and reboot hang) | [`3aa1dcaa4f6f`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3aa1dcaa4f6f) | Tested |
 
-Accepted in the mt76 tree and queued for mainline: mt7925 usb/sdio TX headroom, mt7925 mlo_pm_work cancel-on-stop, and mt76x02 fcsfail monitor-mode RX fixes. In review on linux-wireless: mt792x active-monitor advertisement fix.
+Accepted and queued for mainline: mt7925 usb/sdio TX headroom, mt7925 mlo_pm_work cancel-on-stop, two mt76x02 monitor-mode RX fixes, and the mt792x active-monitor advertisement fix.
+
+In review on linux-wireless: an mt76 USB/SDIO TX-completion RCU fix, `drv_pmctrl` return checks on the mt7921 and mt7925 PCIe reset paths, `dev->mutex` / `iflist_mtx` lock-inversion fixes for mt7921 and mt7925, mt792x ACPI SAR table length validation, and an mt7615 fix to stop tearing down BSS/STA state for monitor vifs.
 
 Write and triage collaborator on [morrownr/mt76](https://github.com/morrownr/mt76): review, tester coordination, and liaison between the repo, linux-wireless, and MediaTek. The end-user [install and uninstall scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) let anyone run the patched drivers without opening a kernel tree.
 
