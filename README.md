@@ -17,7 +17,7 @@ Full-time on Linux internals, reverse engineering, and vulnerability research si
 
 Merged to mainline. Patches I authored or co-developed; six carry `Cc: stable`, so they flow back into the long-term kernels.
 
-| Patch | Commit | Role | In plain terms |
+| Patch | Commit | Role | Description |
 |---|---|---|---|
 | rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Author | Driver answered a hardcoded 42 when asked how much transmit capacity was left, so nothing ever throttled |
 | mt76 / mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb | [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23) | Author | Bridging wired traffic into a Wi-Fi access point panicked the kernel |
