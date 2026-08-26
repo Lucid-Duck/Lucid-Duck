@@ -15,28 +15,49 @@ Since January 2026 I've been full-time on Linux internals, reverse engineering, 
 
 ### Upstream contributions
 
-Merged to mainline. I've labelled my role on each, since some I authored and others I co-developed or reported and tested:
+Merged to the mainline Linux kernel. I wrote all of these except the last pair, which I co-developed with MediaTek. Almost all of it is USB Wi-Fi, where bugs that PCIe never hits sit undisturbed for years.
 
-| Patch | Commit | Role |
-|---|---|---|
-| rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Author |
-| mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Author |
-| mt76 / mt7921: assert sniffer on chanctx change | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Author |
-| mt76 / connac: cache txpower_cur via a helper | [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc) | Co-developed |
-| mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-developed |
-| mt76 / mt792x: report txpower for the requested vif link | [`879d754e48f6`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=879d754e48f6) | Reported, Tested |
-| rtw89 / phy: increase RF calibration timeouts for USB transport | [`5055188134c3`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5055188134c3) | Reported, Tested |
-| mac80211: fix monitor mode frame capture for real chanctx drivers | [`d832f6b83d48`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d832f6b83d48) | Tested, Signed-off |
-| mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Author |
-| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Author |
-| mt76 / mt7921: refactor regd update to fix recursive mutex deadlock | [`d6e7d57ed967`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d6e7d57ed967) | Tested |
-| mt76: revert "Disable napi when removing device" (unload and reboot hang) | [`3aa1dcaa4f6f`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3aa1dcaa4f6f) | Tested |
+**Kernel panic when bridging wired traffic to a Wi-Fi 7 USB adapter** [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23)
 
-Accepted and queued for mainline: mt7925 usb/sdio TX headroom, mt7925 mlo_pm_work cancel-on-stop, two mt76x02 monitor-mode RX fixes, and the mt792x active-monitor advertisement fix.
+The mt7925 transmit path pushes its own headers onto every outgoing frame and assumed the space for them was already reserved. It is, for traffic the machine generates itself. It is not for traffic forwarded in from another interface, so bridging ethernet to an mt7925 access point killed the kernel on the first forwarded frame that arrived short. Whether a given box hits it depends on how much slack the incoming interface happens to leave, which is why it looked random. Reproduced on a Raspberry Pi 5 bridging onboard ethernet to a Netgear A9000, originally reported on an OpenWrt router. Tagged for stable.
 
-In review on linux-wireless: an mt76 USB/SDIO TX-completion RCU fix, `drv_pmctrl` return checks on the mt7921 and mt7925 PCIe reset paths, `dev->mutex` / `iflist_mtx` lock-inversion fixes for mt7921 and mt7925, mt792x ACPI SAR table length validation, and an mt7615 fix to stop tearing down BSS/STA state for monitor vifs.
+**A PCIe-only event crashing USB and SDIO adapters** [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243)
 
-Also in flight, on MediaTek's own patches: Co-developed-by on an mt792x SDIO TX use-after-free fix, and Tested-by on the mt792x USB TX memory-leak fix and the mt7925 module-unload MCU timeout fix.
+A hardware notification that only exists on PCIe was being handled on every bus. On USB and SDIO it reached a queue-cleanup callback those buses do not implement, so the receive worker called through a NULL pointer and the machine went down. The same defect had been copied into three drivers (mt7921, mt7925 and mt7615), so the series fixes all three. Tagged for stable.
+
+**Realtek USB: transmit flow control was a placeholder value** [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0)
+
+When the network stack asked the rtw89 USB driver how much transmit capacity was left, the driver answered with a hardcoded 42. That number is the brake the stack uses to slow a sender down, so nothing ever slowed down and in-flight transfers accumulated without limit under sustained load. The fix tracks them per hardware queue and reports the real figure. Benchmarked against the unpatched driver at full rate on two chipsets, no throughput cost, and the retransmits went to zero.
+
+**A bus check reading the wrong half of a union** [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28)
+
+Three bus types share one union in the mt76 device struct. A check asking whether a PCIe hardware offload engine was present read that memory on USB and SDIO devices too, found the unrelated USB fields non-zero, and answered yes. The driver then took the offload receive path, which skips putting received frames back in order, so the far end saw them out of order, read that as packet loss, and retransmitted. Heavy retransmission and poor throughput in access point mode across four chip families, on hardware that was working correctly. Tagged for stable.
+
+**A timer outliving the device that scheduled it** [`81faf578320d`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81faf578320d)
+
+mt7925 queues a power-save work item five seconds out during multi-link setup and never cancelled it when the device stopped. Tear the device down inside that window and the timer fires into a workqueue that is already gone. Adds a stop callback that cancels the work first, covering both the PCIe and USB drivers. Tagged for stable.
+
+**Two monitor-mode fixes for older MediaTek adapters** [`ddae0bcb01e7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ddae0bcb01e7), [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8)
+
+Ask an mt76x02 adapter to capture damaged frames and two things went wrong. The driver never passed the hardware's checksum-failure flag up the stack, so nothing in the resulting capture distinguished a corrupted frame from a clean one. And the bounds check on a hardware-supplied frame length was wrapped in a kernel warning, so any garbage frame off the air tainted the kernel, and brought down machines configured to treat warnings as fatal. Both showed up immediately with an MT7612U on a busy channel.
+
+**A capture feature the firmware does not actually support** [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c)
+
+mt76 advertised active monitor mode for every device it drives. On mt792x the firmware ignores it and turning it on stops reception altogether, so anything that asked for the feature it was promised got silence instead. Now gated behind a per-radio flag.
+
+**Packet capture going quiet after a channel change** [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce)
+
+Monitor mode has to be re-asserted to the firmware every time the channel changes. The mt7925 driver did that, mt7921 did not, so capture on mt7921 adapters went dead after any channel switch and reported no error to explain why. Brings the two drivers back in line with each other.
+
+**Transmit power reported for the wrong channel** [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc), [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) (co-developed with MediaTek)
+
+I reported that mt792x adapters were reporting a transmit power that did not match the channel actually in use. These two commits are the groundwork the fix sits on: the regulatory, SAR and per-rate power limit logic moves into shared helpers, so every caller derives power the same way instead of each one open-coding it.
+
+**An adapter its own driver did not recognize** [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9)
+
+One line. The mt7925 driver already handled the chip inside the Netgear A8500, it just did not carry the adapter's USB ID, so the kernel never bound to it and the device did nothing. It works on a stock kernel now, with no out-of-tree module.
+
+Posted and in review on linux-wireless: an RCU fix in the mt76 USB and SDIO transmit completion path, unchecked power-state returns on the mt7921 and mt7925 PCIe reset paths, two lock-ordering fixes for the same drivers, a missing length check on the mt792x ACPI transmit-power tables, and an mt7615 fix to stop monitor interfaces tearing down connection state they do not own. Also co-developed on a MediaTek patch fixing a use-after-free in the mt792x SDIO transmit path.
 
 Write and triage collaborator on [morrownr/mt76](https://github.com/morrownr/mt76): review, tester coordination, and liaison between the repo, linux-wireless, and MediaTek. The end-user [install and uninstall scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) let anyone run the patched drivers without opening a kernel tree.
 
