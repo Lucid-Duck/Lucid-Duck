@@ -7,11 +7,11 @@
 Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fourteen of my patches are in the mainline kernel and seven more are queued for 7.3. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
-Vancouver Island, BC, Canada &nbsp;·&nbsp; devinwittmayer@gmail.com &nbsp;·&nbsp; [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; [Ko-fi](https://ko-fi.com/lucid_duck)
+📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
 
 ---
 
-## Linux kernel
+## 🐧 Linux kernel
 
 ### In mainline
 
@@ -83,7 +83,7 @@ Those fourteen are why the work left is a transmit pipeline that keeps running, 
 
 ---
 
-## Contract work
+## 🔬 Contract work
 
 **Automotive keyless entry, 2026.** A dozen firmware images for a hardware-security vendor, delivered and in flight. Each delivery is a C reimplementation of that firmware's cryptography and key derivation, checked byte for byte against captured radio traffic or against an emulator.
 
@@ -97,7 +97,7 @@ The hard part was getting from a stripped flash dump to a function map. Stock to
 
 ---
 
-## Vulnerability research
+## 🛡️ Vulnerability research
 
 Reported through Bugcrowd and HackerOne. Vendor names are withheld where an embargo or agreement applies.
 
