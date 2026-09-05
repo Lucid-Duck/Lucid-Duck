@@ -2,79 +2,125 @@
 
 > **Linux internals · reverse engineering · vulnerability research**
 
-[![CVE-2026-20161](https://img.shields.io/badge/CVE--2026--20161-Cisco_ThousandEyes-critical)](https://nvd.nist.gov/vuln/detail/CVE-2026-20161) [![14 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-14_patches-orange?logo=linux&logoColor=white)](https://lore.kernel.org/linux-wireless/?q=lucid_duck%40justthetip.ca) [![morrownr/mt76 collaborator](https://img.shields.io/badge/morrownr%2Fmt76-collaborator-blue)](https://github.com/morrownr/mt76) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
+[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![14 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-14_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
-Full-time on Linux internals, reverse engineering, and vulnerability research since January 2026. Between April and July I landed twelve patches in the mainline Linux kernel and co-developed two more, six of them backported to the stable trees, across the Realtek rtw89 and MediaTek mt76 Wi-Fi drivers. Also since January: a published CVE (CVE-2026-20161), a paid embedded-firmware reverse-engineering contract, and a clean-room Wi-Fi driver I am building from the firmware disassembly.
+Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fourteen of my patches are in the mainline kernel and seven more are queued for 7.3. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
-📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
+Vancouver Island, BC, Canada &nbsp;·&nbsp; devinwittmayer@gmail.com &nbsp;·&nbsp; [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; [Ko-fi](https://ko-fi.com/lucid_duck)
 
 ---
 
-## 🐧 Linux kernel and driver work
+## Linux kernel
 
-### Upstream contributions
+### In mainline
 
-Merged to mainline. Patches I authored or co-developed; six carry `Cc: stable`, so they flow back into the long-term kernels.
-
-Most of these share a root cause. USB and SDIO adapters, and monitor mode, run through code written and tested against PCIe cards doing ordinary client traffic, so assumptions that only ever held there sat unexercised for years. The oldest bug in the table was introduced in 2017.
-
-| Patch | Commit | Role | Description |
+| Patch | Commit | Role | What was wrong |
 |---|---|---|---|
-| rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Author | Driver answered a hardcoded 42 when asked how much transmit capacity was left, so nothing ever throttled |
-| mt76 / mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb | [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23) | Author | Bridging wired traffic into a Wi-Fi access point panicked the kernel |
-| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Author | A PCIe-only event crashed USB and SDIO adapters through a NULL pointer |
-| mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Author | USB adapters misread a PCIe field, skipped frame reordering, and shed throughput as access points |
-| mt76 / mt7925: cancel mlo_pm_work on stop | [`81faf578320d`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81faf578320d) | Author | A power-save timer kept firing after the device it belonged to was gone |
-| mt76 / mt76x02: report rx FCS errors to mac80211 | [`ddae0bcb01e7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ddae0bcb01e7) | Author | Captures could not tell a corrupted frame from a clean one |
-| mt76 / mt76x02: do not WARN on invalid rx descriptor length | [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8) | Author | Any garbage frame off the air tainted the kernel, and killed it outright on some configs |
-| mt76 / mt792x: do not advertise active monitor | [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c) | Author | Driver offered a capture mode the firmware ignores, and turning it on stopped reception |
-| mt76 / mt7921: assert sniffer on chanctx change | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Author | Packet capture went dead after a channel change, with no error to explain why |
-| mt76 / connac: cache txpower_cur via a helper | [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc) | Co-developed | Groundwork for a fix I reported: adapters reported transmit power for the wrong channel |
-| mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-developed | Same series: one shared helper for regulatory, SAR and per-rate power limits |
-| mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Author | An adapter its own driver already supported but did not recognize |
+| rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Authored | Asked how much transmit room was left, the driver answered a hardcoded 42, so nothing ever throttled |
+| mt76 / mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb | [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23) | Authored | Bridging wired traffic into a Wi-Fi access point panicked the kernel |
+| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Authored | An event that only exists on PCIe crashed USB and SDIO adapters |
+| mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Authored | USB adapters read a field that means nothing off PCIe, skipped frame reordering, and lost throughput as access points |
+| mt76 / mt7925: cancel mlo_pm_work on stop | [`81faf578320d`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81faf578320d) | Authored | A power-save timer kept firing after the device it belonged to was gone |
+| mt76 / mt76x02: report rx FCS errors to mac80211 | [`ddae0bcb01e7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ddae0bcb01e7) | Authored | Captures could not tell a corrupted frame from a clean one |
+| mt76 / mt76x02: do not WARN on invalid rx descriptor length | [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8) | Authored | Any garbage frame off the air tainted the kernel, and killed it outright on some builds |
+| mt76 / mt792x: do not advertise active monitor | [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c) | Authored | Turned off a capture mode that received nothing. I later traced the cause to the wireless stack itself and [posted a revert](https://lore.kernel.org/linux-wireless/20260903200947.27051-1-lucid_duck@justthetip.ca/) |
+| mt76 / mt7921: assert sniffer on chanctx change | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Authored | Packet capture went dead after a channel change, with no error to explain it |
+| mt76 / connac: cache txpower_cur via a helper | [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc) | Co-authored | Groundwork for a bug I reported: adapters reported transmit power for the wrong channel |
+| mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Folded three copies of the power-limit maths into one helper |
+| mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Authored | An adapter its own driver already supported but did not recognise |
 
-Ten more in review on linux-wireless, two of them in mac80211 core rather than a driver: refusing to make a monitor interface active when it has no queue, and dropping the monitor filter counts on stop rather than only sometimes. The other eight are mt76: a USB/SDIO TX-completion RCU fix, `drv_pmctrl` return checks on the mt7921 and mt7925 PCIe reset paths, `dev->mutex` / `iflist_mtx` lock-inversion fixes for the same two, ACPI SAR table length validation and a NULL dereference in ACPI SAR init on mt792x, and an mt7615 fix to stop tearing down BSS/STA state for monitor vifs. Also co-developed on a MediaTek fix for an mt792x SDIO TX use-after-free.
+Six carry a stable tag. Five have shipped in the stable trees, across six branches back to 6.1. The oldest bug in the table dates to 2017.
 
-Write and triage collaborator on [morrownr/mt76](https://github.com/morrownr/mt76): review, tester coordination, and liaison between the repo, linux-wireless, and MediaTek. The end-user [install and uninstall scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) let anyone run the patched drivers without opening a kernel tree.
+Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code that was only ever tested on PCIe cards doing ordinary client traffic.
 
-### AIC8800 open-firmware Wi-Fi driver (clean-room, in progress)
+### Applied, queued for 7.3
 
-The AICSemi AIC8800 USB Wi-Fi family has no mainline Linux support: the vendor ships a closed firmware blob and an out-of-tree module that breaks on current kernels. I'm building an open mac80211 SoftMAC for it the way carl9170 and b43-openfwwf were built, my own firmware on the chip and mac80211 on the host, with no vendor blob and no hybrid. Those two are the only fully open Wi-Fi firmwares in mainline, both took years, and both had vendor documentation. This one does not.
+Seven are in the [mt76 maintainer tree](https://github.com/nbd168/wireless/commits/mt76-fixes/), signed off and waiting on the next pull.
 
-Where it stands: I've reverse-engineered the chip's boot and init, the USB datapath, the TX and RX DMA rings, the firmware load mechanism, and the RF calibration (LOFT/IQ) path, all from the disassembly with no source and no datasheet. The calibration code is written and executes cleanly on the chip, but this is pre-first-light: no RF emitted yet, not a frame and not a carrier. Fourteen on-silicon fires, each byte-identical to the vendor's own emitting register state, all came back dark, which is what proved emission here is a live process and not a register state. The remaining work is a persistently running TX pipeline and the calibration that depends on it.
+| Patch | What was wrong |
+|---|---|
+| Check the power handshake on two PCIe reset paths | A failed handshake let the reset carry on and reload firmware onto a chip the driver no longer owned. Reported and tested by a user who hit it |
+| Fix the same lock inversion in two drivers, in two places | Both took their locks in the opposite order from the stack, once on a channel change and again over suspend and resume |
+| Honour the failed-checksum filter on one driver | The driver worked out which broken frames the user had asked to see, then told the firmware to drop them anyway |
 
-Bench: a self-built Wi-Fi 7 access point on a BPi-R4 Pro, with x86 and aarch64 clients.
+### On the list
 
-### rtw89 USB 2 to USB 3 mode gap
+Six of mine are still open, plus a use-after-free fix in the SDIO transmit path that I co-authored, now at v4.
 
-Proved that mainline silently caps several Realtek Wi-Fi 6/6E/7 USB adapters at USB 2 speeds (258 vs 802 Mbps on identical hardware), across four adapters, three chipsets, and two host architectures. Evidence and crash reports: [rtw89-usb3-gap](https://github.com/Lucid-Duck/rtw89-usb3-gap).
+| Patch | What is wrong |
+|---|---|
+| Refuse to promote a monitor interface with no queue | Two commands from a user with network-admin rights crash a driver while a global lock is held, so every later network call blocks behind it |
+| Balance the monitor receive filters | Bringing a monitor up raises the filter counts, taking it down does not always lower them, and the hardware keeps delivering frames nobody asked for |
+| Protect a transmit completion path | The completion thread reads station data that can be freed underneath it |
+| Do not read the power table before it exists | Some laptops carry a vendor power table in firmware. The driver reads it too early and the Wi-Fi interface never appears. Three people hit it, two confirmed the fix |
+| Pick the power table layout from the table | Some firmware labels its table with the wrong version. The driver reads it a byte out and clamps transmit power. The reporter measured 2 dBm against the 14.5 the table holds |
+| Revert the active monitor change | The row above. It needs the stack fix first |
+
+Mainline carries my testing credit on eight other people's commits and my report credit on four. I also carried another contributor's monitor capture fix from its second revision through to merge, as [`d832f6b83d48`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d832f6b83d48).
+
+### morrownr's repos
+
+Write and triage collaborator on three of [morrownr](https://github.com/morrownr)'s repos. Review, tester coordination, and the link between them, linux-wireless and upstream.
+
+- **[USB-WiFi](https://github.com/morrownr/USB-WiFi)**: adapter reviews, a list of what actually works on Linux, chipset tables and user support. I'm listed as one of its two site maintainers.
+- **[mt76](https://github.com/morrownr/mt76)**: out-of-tree builds of the mt76 driver for kernels 6.12 through 7.2, so people get current fixes without waiting on a distro. The [install scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) handle DKMS and Secure Boot.
+- **[rtw89](https://github.com/morrownr/rtw89)**: the same job for the rtw89 series, writing and testing USB drivers with the aim of getting them upstream.
+
+### AIC8800 open firmware (clean-room, in progress)
+
+This USB Wi-Fi family has no mainline support. The vendor's own driver was told upstream to be redesigned from scratch first, and the licence on its firmware is still unresolved. So I'm writing a replacement: my firmware on the chip, the standard Linux stack on the host, no vendor blob.
+
+    reverse engineered   boot and init, the USB data path, the transmit and receive
+                         rings, firmware load, and the calibration that nulls carrier
+                         leakage. From the disassembly, with no source and no datasheet
+    written and running  the calibration, clean on silicon
+    still to come        first light. No frame, no carrier, nothing on air yet
+    on-silicon fires     14, each matching the vendor's own emitting register state
+                         byte for byte, every one dark
+
+Those fourteen are why the work left is a transmit pipeline that keeps running, and the calibration that depends on it.
 
 ---
 
-## 🔬 Embedded firmware reverse engineering (contract, 2026)
+## Contract work
 
-Automotive keyless-entry firmware RE for a hardware-security vendor: a dozen firmware images delivered and in flight, each a byte-exact C reimplementation of the firmware's cryptography and key-derivation, validated against captured radio traffic or instruction-accurate emulation.
+**Automotive keyless entry, 2026.** A dozen firmware images for a hardware-security vendor, delivered and in flight. Each delivery is a C reimplementation of that firmware's cryptography and key derivation, checked byte for byte against captured radio traffic or against an emulator.
 
-- Seven MCU families: STM8, ARM Cortex-M0, PIC, HCS12 / HCS12X, V850, R32C, 8051.
-- The hard part was getting from a stripped flash dump to a function map. Where stock tooling fell down on paged flash and uncommon cores, I wrote a function walker, disassembler, and instruction-accurate emulator from scratch.
-- Ciphers: KeeLoq variants, XTEA, AES-128, custom block and S-box ciphers, a DST80-family stream cipher, several PRNG designs.
+    cores      STM8, ARM Cortex-M0, PIC, HCS12 and HCS12X, V850, R32C, 8051
+    ciphers    KeeLoq variants, XTEA, AES-128, a DST80-family stream cipher,
+               custom block and S-box designs, several PRNGs
 
----
+The hard part was getting from a stripped flash dump to a function map. Stock tooling gave up on paged flash and the uncommon cores, so I wrote my own function walker, disassembler and emulator.
 
-## 🛡️ Vulnerability research
-
-All findings disclosed through coordinated disclosure; most have shipped fixes. Vendor names are withheld where embargoes or NDAs apply.
-
-- **Local root on a Linux network-monitoring agent:** [CVE-2026-20161](https://nvd.nist.gov/vuln/detail/CVE-2026-20161) (Cisco ThousandEyes), my first CVE. Symlink-following plus a Linux loader feature lets any local user gain persistent system-wide root.
-- **Three privilege escalations in an enterprise VPN client:** a Windows race to SYSTEM, a Linux command injection running as root from an unauthenticated local socket, and a Linux file-write primitive that becomes system-wide RCE. The same product also leaked credentials via a world-readable shared-memory region.
-- **Remote code execution in a Windows endpoint-protection product:** one crafted UDP packet corrupts memory in the network-filter service. Vendor-confirmed, fix shipped.
-- **Cross-customer impersonation on a virtual-gateway product:** a certificate-authority private key hardcoded into firmware and identical across every deployment worldwide, plus an RSA-512 license-signing key forgery (512-bit modulus factored, private key recovered), validated on a live appliance.
-- **Network-appliance SSRF to cloud IAM credential theft** via a DNS-rebinding filter bypass that reaches the instance metadata service.
-- **Audit-log poisoning on an enterprise Linux EDR:** a binary IPC protocol reverse-engineered into a quarantine bypass and a primitive that injects fabricated entries into the cloud admin console's audit log.
-
-Reported through authorized programs on Bugcrowd and HackerOne, with further findings across identity, telecom, fintech, and IoT.
+**Linux wireless driver, current.** Driver work for a module vendor so their USB part can carry long-range video links. Fixed-rate injection, narrow 5 and 10 MHz channels, and getting the result upstream.
 
 ---
 
-<sub>More at [github.com/Lucid-Duck](https://github.com/Lucid-Duck) and [justthetip.ca](https://justthetip.ca), built and documented as I go.</sub>
+## Vulnerability research
+
+Reported through Bugcrowd and HackerOne. Vendor names are withheld where an embargo or agreement applies.
+
+- **First CVE, arbitrary file overwrite as root.** [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) (Cisco ThousandEyes). A monitoring agent running as root followed a symlink out of its own log directory, so a local user with low privileges could overwrite any file on the box. Fixed in 1.234.0.
+
+- **Five privilege escalations in one enterprise VPN client.** A race to SYSTEM and a forced-authentication escalation on Windows. On Linux, a local socket that ran a caller's commands as root, a path traversal through that same socket, and arbitrary file write as root by symlink.
+
+- **Windows logon passwords out of the same product.** A shared memory object any user could write held the address its credential provider sends passwords to. Point that at your own listener, decrypt with a key hardcoded in the product, and you have someone else's password.
+
+- **Denial of service on a Windows endpoint-protection product.** A DNS response carrying a few thousand chained compression pointers makes the network filter recurse until it runs out of stack. The process dies and network-level protection stays down. The vendor reproduced it.
+
+- **A certificate authority private key shipped inside firmware.** A virtual gateway's published image carries one CA key, generated once and identical in every deployment. Pull it out of the public image, forge a certificate the appliance trusts, sit on the management channel. Reproduced by the triager, then closed by the vendor as not applicable.
+
+- **Licence forgery on a network management appliance.** The signing key was a 512-bit RSA modulus. Factored it, recovered the private key, forged licences on a live appliance.
+
+- **SSRF to cloud credentials.** DNS rebinding walked through a cloud networking product's SSRF filter and reached the instance metadata service, which hands out the host's cloud credentials.
+
+- **Quarantine bypass and audit log forgery on a Linux endpoint product.** A world-writable scanning socket speaking a binary protocol. Reverse engineered it into a quarantine bypass and into a way to write fabricated entries into the cloud console's audit log.
+
+- **Two account takeovers at a telecom carrier.** One takes over a webmail account with no click, through a hole in the HTML sanitiser. The other resets any customer's password by brute forcing a one-time code that has no rate limit.
+
+Further findings across identity, fintech and IoT.
+
+---
+
+<sub>More at [github.com/Lucid-Duck](https://github.com/Lucid-Duck) and [justthetip.ca](https://justthetip.ca).</sub>
