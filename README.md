@@ -4,7 +4,7 @@
 
 [![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![14 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-14_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
-Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fourteen of my patches are in the mainline kernel and seven more are queued for 7.3. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
+Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fourteen of my patches are in the mainline kernel. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
 📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
@@ -34,32 +34,7 @@ Six carry a stable tag. Five have shipped in the stable trees, across six branch
 
 Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code that was only ever tested on PCIe cards doing ordinary client traffic.
 
-### Applied, queued for 7.3
-
-Seven are in the [mt76 maintainer tree](https://github.com/nbd168/wireless/commits/mt76-fixes/), signed off and waiting on the next pull.
-
-| Patch | What was wrong |
-|---|---|
-| Check the power handshake on two PCIe reset paths | A failed handshake let the reset carry on and reload firmware onto a chip the driver no longer owned. Reported and tested by a user who hit it |
-| Fix the same lock inversion in two drivers, in two places | Both took their locks in the opposite order from the stack, once on a channel change and again over suspend and resume |
-| Honour the failed-checksum filter on one driver | The driver worked out which broken frames the user had asked to see, then told the firmware to drop them anyway |
-
-### On the list
-
-Six of mine are still open, plus a use-after-free fix in the SDIO transmit path that I co-authored, now at v4.
-
-| Patch | What is wrong |
-|---|---|
-| Refuse to promote a monitor interface with no queue | Two commands from a user with network-admin rights crash a driver while a global lock is held, so every later network call blocks behind it |
-| Balance the monitor receive filters | Bringing a monitor up raises the filter counts, taking it down does not always lower them, and the hardware keeps delivering frames nobody asked for |
-| Protect a transmit completion path | The completion thread reads station data that can be freed underneath it |
-| Do not read the power table before it exists | Some laptops carry a vendor power table in firmware. The driver reads it too early and the Wi-Fi interface never appears. Three people hit it, two confirmed the fix |
-| Pick the power table layout from the table | Some firmware labels its table with the wrong version. The driver reads it a byte out and clamps transmit power. The reporter measured 2 dBm against the 14.5 the table holds |
-| Revert the active monitor change | The row above. It needs the stack fix first |
-
-Mainline carries my testing credit on eight other people's commits and my report credit on four. I also carried another contributor's monitor capture fix from its second revision through to merge, as [`d832f6b83d48`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d832f6b83d48).
-
-### morrownr's repos
+### ❤️ morrownr's repos
 
 Write and triage collaborator on three of [morrownr](https://github.com/morrownr)'s repos. Review, tester coordination, and the link between them, linux-wireless and upstream.
 
@@ -78,8 +53,6 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
     still to come        first light. No frame, no carrier, nothing on air yet
     on-silicon fires     14, each matching the vendor's own emitting register state
                          byte for byte, every one dark
-
-Those fourteen are why the work left is a transmit pipeline that keeps running, and the calibration that depends on it.
 
 ---
 
@@ -123,4 +96,4 @@ Further findings across identity, fintech and IoT.
 
 ---
 
-<sub>More at [github.com/Lucid-Duck](https://github.com/Lucid-Duck) and [justthetip.ca](https://justthetip.ca).</sub>
+<sub>[justthetip.ca](https://justthetip.ca): the writing, and every machine and radio on the lab bench.</sub>
