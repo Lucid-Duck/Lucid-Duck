@@ -50,10 +50,11 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
     reverse engineered   boot and init, the USB data path, the transmit and receive
                          rings, firmware load, and the calibration that nulls carrier
                          leakage. From the disassembly, with no source and no datasheet
-    written and running  the calibration, clean on silicon
-    still to come        first light. No frame, no carrier, nothing on air yet
-    on-silicon fires     14, each matching the vendor's own emitting register state
-                         byte for byte, every one dark
+    on air               a CW carrier, keyed by nine writes of my own on a radio the
+                         vendor's image sets up. +45.4 and +26.5 dB over a -101 dBm
+                         floor, reproduced on a second day, with the vendor's own tone
+                         as a positive control
+    next                 frames
 
 ---
 
