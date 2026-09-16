@@ -2,9 +2,9 @@
 
 > **Linux internals · reverse engineering · vulnerability research**
 
-[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![14 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-14_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
+[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![15 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-15_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
-Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fourteen of my patches are in the mainline kernel. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
+Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fifteen of my patches are in the mainline kernel. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
 📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
@@ -17,6 +17,7 @@ Full-time on Linux internals, reverse engineering and vulnerability research sin
 
 | Patch | Commit | Role | What was wrong |
 |---|---|---|---|
+| mt76 / mt792x: fix NULL dereference in ACPI SAR init during probe | [`7825de3f75d1`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7825de3f75d1) | Authored | Laptops carrying a vendor power table in firmware died during boot and came up with no Wi-Fi at all. Linus applied this one straight off the mailing list |
 | rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Authored | Asked how much transmit room was left, the driver answered a hardcoded 42, so nothing ever throttled |
 | mt76 / mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb | [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23) | Authored | Bridging wired traffic into a Wi-Fi access point panicked the kernel |
 | mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Authored | An event that only exists on PCIe crashed USB and SDIO adapters |
@@ -30,7 +31,7 @@ Full-time on Linux internals, reverse engineering and vulnerability research sin
 | mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Folded three copies of the power-limit maths into one helper |
 | mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Authored | An adapter its own driver already supported but did not recognise |
 
-Six carry a stable tag. Five have shipped in the stable trees, across six branches back to 6.1. The oldest bug in the table dates to 2017.
+Six carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug in the table dates to 2017.
 
 Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code that was only ever tested on PCIe cards doing ordinary client traffic.
 
