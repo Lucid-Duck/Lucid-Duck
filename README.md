@@ -2,9 +2,9 @@
 
 > **Linux internals · reverse engineering · vulnerability research**
 
-[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![15 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-15_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
+[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![16 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-16_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
-Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Fifteen of my patches are in the mainline kernel. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
+Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Sixteen of my patches are in the mainline kernel, two of them co-developed with a MediaTek engineer, and thirteen more are accepted and on their way. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
 📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
@@ -17,23 +17,26 @@ Full-time on Linux internals, reverse engineering and vulnerability research sin
 
 | Patch | Commit | Role | What was wrong |
 |---|---|---|---|
-| mt76 / mt792x: fix NULL dereference in ACPI SAR init during probe | [`7825de3f75d1`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7825de3f75d1) | Authored | Laptops carrying a vendor power table in firmware died during boot and came up with no Wi-Fi at all. Linus applied this one straight off the mailing list |
+| mt76 / mt792x: fix NULL dereference in ACPI SAR init during probe | [`7825de3f75d1`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7825de3f75d1) | Authored | On laptops carrying a vendor power table in firmware, the driver crashed during startup and the Wi-Fi never came up. Linus applied this one straight off the mailing list |
+| mac80211: refuse to make a monitor active when it has no queue | [`2b04d6556964`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2b04d6556964) | Authored | Flagging a monitor interface active while it was down left it with no transmit queue, and ath9k crashed on it |
 | rtw89: fix USB TX flow control by tracking in-flight URBs | [`80119a77e5b0`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=80119a77e5b0) | Authored | Asked how much transmit room was left, the driver answered a hardcoded 42, so nothing ever throttled |
 | mt76 / mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb | [`ef3e34874d23`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef3e34874d23) | Authored | Bridging wired traffic into a Wi-Fi access point panicked the kernel |
-| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Authored | An event that only exists on PCIe crashed USB and SDIO adapters |
+| mt76 / mt7921, mt7925, mt7615: drop TXRX_NOTIFY on non-MMIO buses | [`da4082e91aca`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da4082e91aca), [`feeff151c83e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=feeff151c83e), [`39afc46c0243`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39afc46c0243) | Authored | An event that only exists on PCIe and built-in SoC radios crashed USB and SDIO adapters |
 | mt76: restrict NPU/PPE active checks to MMIO devices | [`7981aca2bd28`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7981aca2bd28) | Authored | USB adapters read a field that means nothing off PCIe, skipped frame reordering, and lost throughput as access points |
 | mt76 / mt7925: cancel mlo_pm_work on stop | [`81faf578320d`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81faf578320d) | Authored | A power-save timer kept firing after the device it belonged to was gone |
 | mt76 / mt76x02: report rx FCS errors to mac80211 | [`ddae0bcb01e7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ddae0bcb01e7) | Authored | Captures could not tell a corrupted frame from a clean one |
-| mt76 / mt76x02: do not WARN on invalid rx descriptor length | [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8) | Authored | Any garbage frame off the air tainted the kernel, and killed it outright on some builds |
+| mt76 / mt76x02: do not WARN on invalid rx descriptor length | [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8) | Authored | Any garbage frame off the air tainted the kernel, and crashed machines set to panic on warnings |
 | mt76 / mt792x: do not advertise active monitor | [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c) | Authored | Turned off a capture mode that received nothing. I later traced the cause to the wireless stack itself and [posted a revert](https://lore.kernel.org/linux-wireless/20260903200947.27051-1-lucid_duck@justthetip.ca/) |
-| mt76 / mt7921: assert sniffer on chanctx change | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Authored | Packet capture went dead after a channel change, with no error to explain it |
+| mt76 / mt7921: assert sniffer on chanctx change | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Authored | The mt7921 driver never re-set sniffer mode after a channel change, the gap behind a capture regression in 6.17 and 6.18 |
 | mt76 / connac: cache txpower_cur via a helper | [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc) | Co-authored | Groundwork for a bug I reported: adapters reported transmit power for the wrong channel |
-| mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Folded three copies of the power-limit maths into one helper |
+| mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Pulled the regulatory, SAR and rate-limit power steps into one helper, which the fix then reused |
 | mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Authored | An adapter its own driver already supported but did not recognise |
 
-Six carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug in the table dates to 2017.
+Seven carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug in the table dates to 2017.
 
-Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code that was only ever tested on PCIe cards doing ordinary client traffic.
+Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code written and tested mainly for PCIe cards doing ordinary client traffic.
+
+Six more mainline commits credit me for reporting, testing or carrying them upstream.
 
 ### ❤️ morrownr's repos
 
@@ -50,10 +53,10 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
     reverse engineered   boot and init, the USB data path, the transmit and receive
                          rings, firmware load, and the calibration that nulls carrier
                          leakage. From the disassembly, with no source and no datasheet
-    on air               a CW carrier, keyed by nine writes of my own on a radio the
-                         vendor's image sets up. +45.4 and +26.5 dB over a -101 dBm
-                         floor, reproduced on a second day, with the vendor's own tone
-                         as a positive control
+    on air               my own firmware, running standalone, programs the synthesiser
+                         and puts a narrow CW carrier where it is commanded. Two targets
+                         66 MHz apart landed 66.01 MHz apart, each within 20 kHz, and
+                         every peak vanishes with the chip powered down
     next                 frames
 
 ---
@@ -68,7 +71,7 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
 
 The hard part was getting from a stripped flash dump to a function map. Stock tooling gave up on paged flash and the uncommon cores, so I wrote my own function walker, disassembler and emulator.
 
-**Linux wireless driver, current.** Driver work for a module vendor so their USB part can carry long-range video links. Fixed-rate injection, narrow 5 and 10 MHz channels, and getting the result upstream.
+**Linux wireless driver, current.** Driver work for a module vendor so their USB part can carry long-range video links. Fixed-rate injection, narrow channels, and getting the result upstream.
 
 ---
 
