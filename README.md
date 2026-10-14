@@ -1,27 +1,52 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
-  <img alt="Lucid Duck: Linux internals, reverse engineering, vulnerability research" src="assets/banner-light.svg" width="100%">
+  <img alt="tinySA Ultra+ spectrum analyzer screen showing two carriers 66.01 MHz apart" src="assets/banner-light.svg" width="100%">
 </picture>
+
+# Linux Wi-Fi driver developer and firmware reverse engineer
 
 [![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![18 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-18_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:lucid_duck@justthetip.ca?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
 Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Eighteen of my patches are in the mainline kernel, two of them co-developed with a MediaTek engineer, and fourteen more are accepted and on their way. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
-<p align="center">
-  <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7825de3f75d1"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-linus-dark.svg"><img alt="Applied by Linus Torvalds: my mt792x ACPI SAR crash fix, pulled straight off the list into mainline." src="assets/card-linus-light.svg" width="49%"></picture></a>
-  <a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-cisco-dark.svg"><img alt="CVE-2026-20161, credited by Cisco: in the ThousandEyes agent, any local user could overwrite any file on the box." src="assets/card-cisco-light.svg" width="49%"></picture></a>
-  <a href="https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-mainline-dark.svg"><img alt="18 patches in mainline across mt76, rtw89 and mac80211, with 14 more queued for the 7.4 merge window." src="assets/card-mainline-light.svg" width="49%"></picture></a>
-  <a href="#-linux-kernel"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-cves-dark.svg"><img alt="7 Linux kernel CVEs assigned to fixes I wrote. Two of them are backported all the way to 5.10." src="assets/card-cves-light.svg" width="49%"></picture></a>
-  <a href="#aic8800-open-firmware-clean-room-in-progress"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-aic8800-dark.svg"><img alt="My own firmware, on air: on the AIC8800, two carriers commanded 66 MHz apart landed 66.01 MHz apart." src="assets/card-aic8800-light.svg" width="49%"></picture></a>
-  <a href="mailto:lucid_duck@justthetip.ca?subject=Contract%20inquiry"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-hire-dark.svg"><img alt="Available for remote contracts: Linux drivers, firmware and protocol reverse engineering, vulnerability research." src="assets/card-hire-light.svg" width="49%"></picture></a>
-</p>
+<table>
+<tr>
+<td width="50%" valign="top">
+<img src="assets/dot-green.svg" width="14" height="14" alt=""> <b><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7825de3f75d1">Applied by Linus Torvalds</a></b><br>
+My fix for an mt792x crash that left laptops without Wi-Fi, pulled straight off the mailing list into mainline.
+</td>
+<td width="50%" valign="top">
+<img src="assets/dot-blue.svg" width="14" height="14" alt=""> <b><a href="https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU">CVE-2026-20161, credited by Cisco</a></b><br>
+The ThousandEyes Enterprise Agent let a low-privileged local user overwrite any file on the machine.
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<img src="assets/dot-amber.svg" width="14" height="14" alt=""> <b><a href="https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both">18 patches in mainline Linux</a></b><br>
+Fixes in the mt76 (MediaTek), rtw89 (Realtek) and mac80211 Wi-Fi code, with 14 more queued for the 7.4 merge window.
+</td>
+<td width="50%" valign="top">
+<img src="assets/dot-purple.svg" width="14" height="14" alt=""> <b><a href="#-linux-kernel-wi-fi-drivers-mt76-rtw89-mac80211">7 Linux kernel CVEs</a></b><br>
+Assigned to fixes I wrote: CVE-2026-68193, CVE-2026-68194, CVE-2026-68195, CVE-2026-80825, CVE-2026-80936, CVE-2026-90382 and CVE-2026-98182.
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<img src="assets/dot-cyan.svg" width="14" height="14" alt=""> <b><a href="#aic8800-open-firmware-clean-room-in-progress">Open firmware for the AIC8800</a></b><br>
+Clean-room firmware for the AICSemi AIC8800 USB Wi-Fi chip. Two carriers commanded 66 MHz apart landed 66.01 MHz apart, each within 20 kHz.
+</td>
+<td width="50%" valign="top">
+<img src="assets/dot-pink.svg" width="14" height="14" alt=""> <b><a href="mailto:lucid_duck@justthetip.ca?subject=Contract%20inquiry">Available for remote contracts</a></b><br>
+Linux Wi-Fi and USB driver development, firmware and protocol reverse engineering, vulnerability research.
+</td>
+</tr>
+</table>
 
-**Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
 📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ lucid_duck@justthetip.ca &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
 
 ---
 
-## 🐧 Linux kernel
+## 🐧 Linux kernel Wi-Fi drivers: mt76, rtw89, mac80211
 
 Of the eighteen in mainline, seven carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug fixed dates to 2017.
 
@@ -55,7 +80,7 @@ The kernel has assigned CVEs to seven of these fixes, linked under their commits
 
 </details>
 
-### ❤️ morrownr's repos
+### ❤️ morrownr's USB-WiFi, mt76 and rtw89 repos
 
 Write and triage collaborator on three of [morrownr](https://github.com/morrownr)'s repos. Review, tester coordination, and the link between them, linux-wireless and upstream.
 
@@ -78,7 +103,7 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
 
 ---
 
-## 🔬 Contract work
+## 🔬 Contract work: firmware reverse engineering
 
 **Automotive keyless entry, 2026.** A dozen firmware images for a hardware-security vendor, delivered and in flight. Each delivery is a C reimplementation of that firmware's cryptography and key derivation, checked byte for byte against captured radio traffic or against an emulator.
 
