@@ -26,8 +26,8 @@ The ThousandEyes Enterprise Agent let a low-privileged local user overwrite any 
 Fixes in the mt76 (MediaTek), rtw89 (Realtek) and mac80211 Wi-Fi code, with 14 more queued for the 7.4 merge window.
 </td>
 <td width="50%" valign="top">
-<img src="assets/dot-purple.svg" width="14" height="14" alt=""> <b><a href="#-linux-kernel-wi-fi-drivers-mt76-rtw89-mac80211">7 Linux kernel CVEs</a></b><br>
-Assigned to fixes I wrote: CVE-2026-68193, CVE-2026-68194, CVE-2026-68195, CVE-2026-80825, CVE-2026-80936, CVE-2026-90382 and CVE-2026-98182.
+<img src="assets/dot-purple.svg" width="14" height="14" alt=""> <b><a href="#-linux-kernel-wi-fi-drivers-mt76-rtw89-mac80211">Working with MediaTek and Realtek</a></b><br>
+MediaTek engineers have co-developed patches with me, and Realtek's rtw89 maintainer acks mine.
 </td>
 </tr>
 <tr>
@@ -49,6 +49,8 @@ Linux Wi-Fi and USB driver development, firmware and protocol reverse engineerin
 ## 🐧 Linux kernel Wi-Fi drivers: mt76, rtw89, mac80211
 
 Of the eighteen in mainline, seven carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug fixed dates to 2017.
+
+The kernel has assigned CVEs to seven of these fixes: CVE-2026-68193, CVE-2026-68194, CVE-2026-68195, CVE-2026-80825, CVE-2026-80936, CVE-2026-90382 and CVE-2026-98182. Each is linked under its commit in the table below.
 
 Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code written and tested mainly for PCIe cards doing ordinary client traffic.
 
@@ -75,8 +77,6 @@ Six more mainline commits credit me for reporting, testing or carrying them upst
 | [mt76 / connac: cache txpower_cur via a helper](https://patch.msgid.link/20260401182322.64355-1-sean.wang@kernel.org) | [`8286bbf62dcc`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8286bbf62dcc) | Co-authored | Groundwork for a bug I reported: adapters reported transmit power for the wrong channel |
 | [mt76 / connac: factor out rate power limit calculation](https://patch.msgid.link/20260401182322.64355-2-sean.wang@kernel.org) | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Pulled the regulatory, SAR and rate-limit power steps into one helper, which the fix then reused |
 | [mt76 / mt7925: add Netgear A8500 USB device ID](https://patch.msgid.link/20260527144735.10254-1-lucid_duck@justthetip.ca) | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Authored | An adapter its own driver already supported but did not recognise |
-
-The kernel has assigned CVEs to seven of these fixes, linked under their commits.
 
 </details>
 
