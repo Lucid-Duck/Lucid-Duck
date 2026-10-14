@@ -7,33 +7,31 @@ MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace"
 SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif"
 
 THEMES = {
-    "dark": dict(screen="#010409", border="#30363d", fg="#e6edf3", muted="#8b949e",
-                 grid="#161b22", grid2="#21262d", trace="#e3b341", accent="#58a6ff",
-                 green="#3fb950", hash="#d29922", bar="#161b22"),
-    "light": dict(screen="#f6f8fa", border="#d0d7de", fg="#1f2328", muted="#59636e",
-                  grid="#eaeef2", grid2="#d8dee4", trace="#9a6700", accent="#0969da",
-                  green="#1a7f37", hash="#9a6700", bar="#eaeef2"),
+    "dark": dict(screen="#010409", card="#0d1117", border="#30363d", fg="#e6edf3", muted="#8b949e",
+                 grid="#161b22", grid2="#21262d", trace="#e3b341", accent="#58a6ff", green="#3fb950",
+                 green_c="#3fb950", blue_c="#58a6ff", amber_c="#e3b341", purple_c="#bc8cff",
+                 pink_c="#f778ba", cyan_c="#39c5cf"),
+    "light": dict(screen="#f6f8fa", card="#ffffff", border="#d0d7de", fg="#1f2328", muted="#59636e",
+                  grid="#eaeef2", grid2="#d8dee4", trace="#9a6700", accent="#0969da", green="#1a7f37",
+                  green_c="#1a7f37", blue_c="#0969da", amber_c="#9a6700", purple_c="#8250df",
+                  pink_c="#bf3989", cyan_c="#1b7c83"),
 }
 
 TAGLINE = "Linux internals · reverse engineering · vulnerability research"
 
-COMMITS = [
-    ("af97bf5a7e72", "wifi: mt76: mt792x: pick the SAR table layout from the table itself"),
-    ("5796b2bf9ff7", "wifi: mt76: mt7925: don't put the band auto marker in TGID"),
-    ("2b04d6556964", "wifi: mac80211: refuse to make a monitor active when it has no queue"),
-    ("7825de3f75d1", "wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe"),
-    ("6f6c9800e54c", "wifi: mt76: mt792x: do not advertise active monitor"),
-    ("ef3e34874d23", "wifi: mt76: mt7925: ensure tx headroom in usb_sdio_tx_prepare_skb"),
-    ("81faf578320d", "wifi: mt76: mt7925: cancel mlo_pm_work on stop"),
-    ("ddae0bcb01e7", "wifi: mt76: mt76x02: report rx FCS errors to mac80211"),
-    ("81497634d9f8", "wifi: mt76: mt76x02: do not WARN on invalid rx descriptor length"),
-    ("7981aca2bd28", "wifi: mt76: restrict NPU/PPE active checks to MMIO devices"),
-    ("39afc46c0243", "wifi: mt76: mt7615: drop TXRX_NOTIFY on non-mmio buses"),
-    ("feeff151c83e", "wifi: mt76: mt7925: drop TXRX_NOTIFY on non-mmio buses"),
-    ("da4082e91aca", "wifi: mt76: mt7921: drop TXRX_NOTIFY on non-mmio buses"),
-    ("a7d35545c2ce", "wifi: mt76: mt7921: assert sniffer on chanctx change"),
-    ("291b067a02b9", "wifi: mt76: mt7925: add Netgear A8500 USB device ID"),
-    ("80119a77e5b0", "wifi: rtw89: usb: fix TX flow control by tracking in-flight URBs"),
+CARDS = [
+    ("linus", "green_c", "Applied by Linus Torvalds",
+     ("My mt792x ACPI SAR crash fix, pulled", "straight off the list into mainline."), "7825de3f75d1 · MAINLINE"),
+    ("cisco", "blue_c", "CVE-2026-20161",
+     ("Cisco ThousandEyes agent: any local user", "could overwrite any file on the box."), "CREDITED BY CISCO PSIRT"),
+    ("mainline", "amber_c", "18 patches in mainline",
+     ("mt76, rtw89 and mac80211, with 14 more", "queued for the 7.4 merge window."), "LINUX-WIRELESS PATCHWORK"),
+    ("cves", "purple_c", "7 kernel CVEs",
+     ("Assigned to fixes I wrote. Two of them", "are backported all the way to 5.10."), "LINUX KERNEL CNA"),
+    ("aic8800", "cyan_c", "My own firmware, on air",
+     ("AIC8800 clean-room: two carriers commanded", "66 MHz apart landed 66.01 MHz apart."), "CLEAN-ROOM · IN PROGRESS"),
+    ("hire", "pink_c", "Available for contracts",
+     ("Linux drivers, firmware and protocol RE,", "vulnerability research. Remote."), "LUCID_DUCK@JUSTTHETIP.CA"),
 ]
 
 
@@ -120,46 +118,28 @@ def banner(t):
 '''
 
 
-def terminal(t):
+def card(t, color, title, sub, tag, delay):
     c = THEMES[t]
-    W = 1200
-    lh, fs, cw = 25, 15, 9.0
-    y0 = 36 + 26
-    cmd = "git log --oneline --author=lucid_duck@justthetip.ca origin/master"
-    n = len(cmd)
-    H = y0 + (len(COMMITS) + 1) * lh + 20
-    typed = 0.6 + 2.0
-    widths = ";".join(f"{i*cw:.1f}" for i in range(n + 1))
-    carets = ";".join(f"{46 + i*cw:.1f}" for i in range(n + 1))
-
-    rows = [f'<text x="28" y="{y0}" font-family="{MONO}" font-size="{fs}" fill="{c["green"]}">$</text>',
-            f'<g clip-path="url(#cmd)"><text x="46" y="{y0}" font-family="{MONO}" font-size="{fs}" fill="{c["fg"]}" textLength="{n*cw:.1f}" lengthAdjust="spacingAndGlyphs">{esc(cmd)}</text></g>']
-    for i, (h, s) in enumerate(COMMITS, 1):
-        y = y0 + i * lh
-        b = typed + 0.25 + i * 0.11
-        rows.append(f'<g opacity="0"><set attributeName="opacity" to="1" begin="{b:.2f}s"/>'
-                    f'<text x="28" y="{y}" font-family="{MONO}" font-size="{fs}" xml:space="preserve">'
-                    f'<tspan fill="{c["hash"]}">{h}</tspan><tspan fill="{c["fg"]}"> {esc(s)}</tspan></text></g>')
-    yl = y0 + (len(COMMITS) + 1) * lh
-    bl = typed + 0.25 + (len(COMMITS) + 1) * 0.11
-    rows.append(f'<g opacity="0"><set attributeName="opacity" to="1" begin="{bl:.2f}s"/>'
-                f'<text x="28" y="{yl}" font-family="{MONO}" font-size="{fs}" fill="{c["green"]}">$</text>'
-                f'<rect x="46" y="{yl-14}" width="9" height="18" fill="{c["fg"]}">{blink(f"{bl:.2f}s")}</rect></g>')
-
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="git log of my commits in mainline Linux">
-<title>git log of my commits in mainline Linux</title>
-<defs><clipPath id="cmd"><rect x="46" y="{y0-18}" height="26" width="0"><animate attributeName="width" begin="0.6s" dur="2.0s" calcMode="discrete" values="{widths}" fill="freeze"/></rect></clipPath></defs>
-<rect x="1" y="1" width="{W-2}" height="{H-2}" rx="10" fill="{c["screen"]}" stroke="{c["border"]}"/>
-<path d="M1 11a10 10 0 0 1 10-10h{W-22}a10 10 0 0 1 10 10v25H1z" fill="{c["bar"]}"/>
-<line x1="1" y1="36" x2="{W-1}" y2="36" stroke="{c["border"]}"/>
-<circle cx="22" cy="18.5" r="6" fill="#ff5f57"/><circle cx="42" cy="18.5" r="6" fill="#febc2e"/><circle cx="62" cy="18.5" r="6" fill="#28c840"/>
-<text x="{W/2:.0f}" y="23" text-anchor="middle" font-family="{MONO}" font-size="13" fill="{c["muted"]}">lucid_duck@bench: ~/src/linux</text>
-{"".join(rows)}
-<rect x="46" y="{y0-14}" width="9" height="18" fill="{c["fg"]}"><animate attributeName="x" begin="0.6s" dur="2.0s" calcMode="discrete" values="{carets}" fill="freeze"/><set attributeName="opacity" to="0" begin="{typed+0.2:.2f}s"/></rect>
+    a = c[color]
+    W, H = 600, 190
+    label = esc(f"{title}. {' '.join(sub)}")
+    lines = "".join(f'<text x="40" y="{100 + i*28}" font-family="{SANS}" font-size="19" fill="{c["muted"]}">{esc(s)}</text>'
+                    for i, s in enumerate(sub))
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="{label}">
+<title>{label}</title>
+<rect x="1" y="1" width="{W-2}" height="{H-2}" rx="12" fill="{c["card"]}" stroke="{c["border"]}"/>
+<path d="M1 13a12 12 0 0 1 12-12h5v{H-2}h-5a12 12 0 0 1-12-12z" fill="{a}"/>
+<circle cx="40" cy="49" r="6" fill="{a}"/>
+<circle cx="40" cy="49" r="6" fill="none" stroke="{a}" stroke-width="2"><animate attributeName="r" values="6;16" dur="2.4s" begin="{delay:.1f}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0" dur="2.4s" begin="{delay:.1f}s" repeatCount="indefinite"/></circle>
+<text x="62" y="58" font-family="{SANS}" font-size="27" font-weight="700" fill="{c["fg"]}">{esc(title)}</text>
+<text x="{W-26}" y="52" text-anchor="end" font-family="{SANS}" font-size="22" fill="{c["muted"]}">↗</text>
+{lines}
+<text x="40" y="166" font-family="{MONO}" font-size="14" letter-spacing="0.5" fill="{a}">{esc(tag)}</text>
 </svg>
 '''
 
 
 for t in THEMES:
     (OUT / f"banner-{t}.svg").write_text(banner(t), encoding="utf-8", newline="\n")
-    (OUT / f"terminal-{t}.svg").write_text(terminal(t), encoding="utf-8", newline="\n")
+    for i, (name, color, title, sub, tag) in enumerate(CARDS):
+        (OUT / f"card-{name}-{t}.svg").write_text(card(t, color, title, sub, tag, i * 0.4), encoding="utf-8", newline="\n")
