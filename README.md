@@ -1,19 +1,32 @@
-# Lucid Duck
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+  <img alt="Lucid Duck: Linux internals, reverse engineering, vulnerability research" src="assets/banner-light.svg" width="100%">
+</picture>
 
-> **Linux internals · reverse engineering · vulnerability research**
-
-[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![18 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-18_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:devinwittmayer@gmail.com?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
+[![CVE-2026-20161](https://img.shields.io/static/v1?label=CVE-2026-20161&message=Cisco%20ThousandEyes&color=blue)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) [![18 patches in Linux mainline](https://img.shields.io/badge/Linux_mainline-18_patches-orange?logo=linux&logoColor=white)](https://patchwork.kernel.org/project/linux-wireless/list/?submitter=219860&state=%2A&archive=both) [![morrownr collaborator](https://img.shields.io/badge/morrownr-collaborator-blue)](https://github.com/morrownr) [![Available for contracts](https://img.shields.io/badge/available-remote_contracts-success)](mailto:lucid_duck@justthetip.ca?subject=Contract%20inquiry) [![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-blueviolet?logo=comptia&logoColor=white)](https://cp.certmetrics.com/CompTIA/en/public/verify/credential/d083e581bcc54bfdaf2235d5759920f7)
 
 Full-time on Linux internals, reverse engineering and vulnerability research since January 2026. Eighteen of my patches are in the mainline kernel, two of them co-developed with a MediaTek engineer, and fourteen more are accepted and on their way. Also since January: a published CVE, two paid contracts, and an open Wi-Fi firmware I'm writing from the disassembly.
 
 **Available for remote contracts.** Linux driver development, reverse engineering, vulnerability research.
-📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ devinwittmayer@gmail.com &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
+📍 Vancouver Island, BC, Canada &nbsp;·&nbsp; ✉️ lucid_duck@justthetip.ca &nbsp;·&nbsp; 🌐 [justthetip.ca](https://justthetip.ca) &nbsp;·&nbsp; ☕ [Ko-fi](https://ko-fi.com/lucid_duck)
 
 ---
 
 ## 🐧 Linux kernel
 
-### In mainline
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/terminal-dark.svg">
+  <img alt="git log of my commits in mainline Linux" src="assets/terminal-light.svg" width="100%">
+</picture>
+
+Sixteen authored and two co-developed with MediaTek. Seven carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug fixed dates to 2017.
+
+Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code written and tested mainly for PCIe cards doing ordinary client traffic.
+
+Six more mainline commits credit me for reporting, testing or carrying them upstream.
+
+<details>
+<summary><b>Every mainline patch, and what was wrong</b></summary>
 
 | Patch | Commit | Role | What was wrong |
 |---|---|---|---|
@@ -34,13 +47,9 @@ Full-time on Linux internals, reverse engineering and vulnerability research sin
 | mt76 / connac: factor out rate power limit calculation | [`317bc1a0590e`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=317bc1a0590e) | Co-authored | Same series. Pulled the regulatory, SAR and rate-limit power steps into one helper, which the fix then reused |
 | mt76 / mt7925: add Netgear A8500 USB device ID | [`291b067a02b9`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291b067a02b9) | Authored | An adapter its own driver already supported but did not recognise |
 
-Seven carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug in the table dates to 2017.
-
 The kernel has assigned CVEs to seven of these fixes, linked under their commits.
 
-Most of them share a cause. USB and SDIO adapters, and monitor mode, run through code written and tested mainly for PCIe cards doing ordinary client traffic.
-
-Six more mainline commits credit me for reporting, testing or carrying them upstream.
+</details>
 
 ### ❤️ morrownr's repos
 
@@ -85,6 +94,9 @@ Reported through Bugcrowd and HackerOne. Vendor names are withheld where an emba
 
 - **First CVE, arbitrary file overwrite as root.** [CVE-2026-20161](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-te-agentfilewrite-tqUw3SMU) (Cisco ThousandEyes). A monitoring agent running as root followed a symlink out of its own log directory, so a local user with low privileges could overwrite any file on the box. Fixed in 1.234.0.
 
+<details>
+<summary><b>Eight more findings</b></summary>
+
 - **Five privilege escalations in one enterprise VPN client.** A race to SYSTEM and a forced-authentication escalation on Windows. On Linux, a local socket that ran a caller's commands as root, a path traversal through that same socket, and arbitrary file write as root by symlink.
 
 - **Windows logon passwords out of the same product.** A shared memory object any user could write held the address its credential provider sends passwords to. Point that at your own listener, decrypt with a key hardcoded in the product, and you have someone else's password.
@@ -102,6 +114,8 @@ Reported through Bugcrowd and HackerOne. Vendor names are withheld where an emba
 - **Two account takeovers at a telecom carrier.** One takes over a webmail account with no click, through a hole in the HTML sanitiser. The other resets any customer's password by brute forcing a one-time code that has no rate limit.
 
 Further findings across identity, fintech and IoT.
+
+</details>
 
 ---
 
