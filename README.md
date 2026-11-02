@@ -33,7 +33,7 @@ Patches co-developed with MediaTek engineers, and rtw89 fixes acked by Realtek's
 <tr>
 <td width="50%" valign="top">
 <img src="assets/dot-cyan.svg" width="14" height="14" alt=""> <b><a href="#aic8800-open-firmware-clean-room-in-progress">Open firmware for the AIC8800</a></b><br>
-Clean-room firmware for the AICSemi AIC8800 USB Wi-Fi chip. Two carriers commanded 66 MHz apart landed 66.01 MHz apart, each within 20 kHz.
+Clean-room firmware for the AICSemi AIC8800 USB Wi-Fi chip. It now receives and transmits 802.11 frames with none of the vendor's firmware loaded.
 </td>
 <td width="50%" valign="top">
 <img src="assets/dot-pink.svg" width="14" height="14" alt=""> <b><a href="mailto:lucid_duck@justthetip.ca?subject=Contract%20inquiry">Available for remote contracts</a></b><br>
@@ -48,7 +48,7 @@ Linux Wi-Fi and USB driver development, firmware and protocol reverse engineerin
 
 ## 🐧 Linux kernel Wi-Fi drivers: mt76, rtw89, mac80211
 
-Of the thirty-two in mainline, twelve carry a stable tag. Nine have shipped in the stable trees, across eight branches back to 5.10. The oldest bug fixed dates to 2017.
+Of the thirty-two in mainline, twelve carry a stable tag. Eleven have shipped in the stable trees, across eight branches back to 5.10. The oldest bug fixed dates to 2017.
 
 The kernel has assigned CVEs to seven of these fixes: CVE-2026-68193, CVE-2026-68194, CVE-2026-68195, CVE-2026-80825, CVE-2026-80936, CVE-2026-90382 and CVE-2026-98182. Each is linked under its commit in the table below.
 
@@ -74,7 +74,7 @@ Outside wireless, two fixes to the DRM panic screen are queued for mainline. A l
 | [mt76 / mt7925: don't put the band auto marker in TGID](https://patch.msgid.link/20260911024428.65244-1-lucid_duck@justthetip.ca) | [`5796b2bf9ff7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5796b2bf9ff7) | Authored | Every data frame from an access point or a multi-link station went out tagged with a bogus band number |
 | [mt76 / mt76x02: report rx FCS errors to mac80211](https://patch.msgid.link/20260613002544.27750-3-lucid_duck@justthetip.ca) | [`ddae0bcb01e7`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ddae0bcb01e7) | Authored | Captures could not tell a corrupted frame from a clean one |
 | [mt76 / mt76x02: do not WARN on invalid rx descriptor length](https://patch.msgid.link/20260613002544.27750-2-lucid_duck@justthetip.ca) | [`81497634d9f8`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=81497634d9f8)<br>[CVE-2026-90382](https://www.cve.org/CVERecord?id=CVE-2026-90382) | Authored | Any garbage frame off the air tainted the kernel, and crashed machines set to panic on warnings |
-| [mt76 / mt792x: do not advertise active monitor](https://patch.msgid.link/20260722011302.113060-1-lucid_duck@justthetip.ca) | [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c) | Authored | Turned off a capture mode that received nothing. I later traced the real cause to the wireless stack and [posted a revert](https://lore.kernel.org/linux-wireless/20260903200947.27051-1-lucid_duck@justthetip.ca/) |
+| [mt76 / mt792x: do not advertise active monitor](https://patch.msgid.link/20260722011302.113060-1-lucid_duck@justthetip.ca) | [`6f6c9800e54c`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6f6c9800e54c) | Authored | Turned off a capture mode that received nothing. I later traced the real cause to the wireless stack and posted [a series that makes it work](https://lore.kernel.org/linux-wireless/20261027195803.711995-1-lucid_duck@justthetip.ca/) |
 | [mt76 / mt7921: assert sniffer on chanctx change](https://patch.msgid.link/20260515183921.23484-1-lucid_duck@justthetip.ca) | [`a7d35545c2ce`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7d35545c2ce) | Authored | The mt7921 driver never re-set sniffer mode after a channel change, the gap behind a capture regression in 6.17 and 6.18 |
 | [mt76: move the channel survey when the channel changes](https://patch.msgid.link/20261001003501.2425492-1-lucid_duck@justthetip.ca) | [`68342a7bd7e5`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=68342a7bd7e5) | Authored | mt7921 and mt7925 booked every channel survey counter to the first channel of the band, whichever channel the radio was really on |
 | [rtw89: usb: shorten the RX aggregation hold on RTL8922AU over USB 3](https://patch.msgid.link/20261007210958.56528-1-lucid_duck@justthetip.ca) | [`83de3a16c7b3`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=83de3a16c7b3) | Authored | The adapter held received frames for up to a millisecond before passing them on, so downloads over USB 3 at 160 MHz ran about 40 percent slower than the link allowed |
@@ -98,8 +98,10 @@ Outside wireless, two fixes to the DRM panic screen are queued for mainline. A l
 Write and triage collaborator on three of [morrownr](https://github.com/morrownr)'s repos. Review, tester coordination, and the link between them, linux-wireless and upstream.
 
 - **[USB-WiFi](https://github.com/morrownr/USB-WiFi)**: adapter reviews, a list of what actually works on Linux, chipset tables and user support. I'm listed as one of its two site maintainers.
-- **[mt76](https://github.com/morrownr/mt76)**: out-of-tree builds of the mt76 driver for kernels 6.12 through 7.4, so people get current fixes without waiting on a distro. The [install scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) handle DKMS and Secure Boot.
+- **[mt76](https://github.com/morrownr/mt76)**: one of its three listed maintainers. Out-of-tree builds of the mt76 driver for kernels 6.12 through 7.4, so people get current fixes without waiting on a distro. The [install scripts](https://github.com/morrownr/mt76/blob/main/install-driver.sh) handle DKMS and Secure Boot.
 - **[rtw89](https://github.com/morrownr/rtw89)**: the same job for the rtw89 series, writing and testing USB drivers with the aim of getting them upstream.
+
+With morrownr I also help a USB Wi-Fi adapter maker on Linux: answers to its engineering questions for an upcoming adapter, and Linux test data on its current lineup. Eight adapters profiled, and the flagship ran 480 test iterations across three machines without a failure.
 
 ### AIC8800 open firmware (clean-room, in progress)
 
@@ -112,7 +114,14 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
                          and puts a narrow CW carrier where it is commanded. Two targets
                          66 MHz apart landed 66.01 MHz apart, each within 20 kHz, and
                          every peak vanishes with the chip powered down
-    next                 frames
+    receive              it arms the receiver and streams every frame it hears on
+                         2412 MHz to the host over USB, checksum included: 259 frames
+                         in 20 seconds, every one good, checked frame by frame against
+                         a second receiver's capture
+    transmit             frames the host sends over USB go out on the air: 40 of 40
+                         sent in each of two runs, and every one the second receiver
+                         caught was byte-exact
+    next                 getting the radio to answer frames sent to it
 
 ---
 
@@ -126,7 +135,7 @@ This USB Wi-Fi family has no mainline support. The vendor's own driver was told 
 
 The hard part was getting from a stripped flash dump to a function map. Stock tooling gave up on paged flash and the uncommon cores, so I wrote a function walker, disassembler and emulator for it.
 
-**Linux wireless driver, current.** Driver work for a module vendor so their USB part can carry long-range video links. Fixed-rate injection, narrow channels, and getting the result upstream.
+**Linux wireless driver, 2026.** Driver work for a module vendor so their USB part can carry long-range video links: fixed-rate injection and narrow channels.
 
 ---
 
